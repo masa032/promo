@@ -1,12 +1,14 @@
 ﻿import os
 import json
 import glob
+import random
 from datetime import datetime
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 LOGS_DIR = os.path.join(BASE_DIR, "logs")
 OUTPUT_DIR = os.path.join(BASE_DIR, "output")
 DRAFT_DIR = os.path.join(BASE_DIR, "drafts")
+IMAGES_DIR = os.path.join(BASE_DIR, "images", "hanryul")
 SITE_URL = "https://masa032.github.io/ichannels-promo/"
 FACEBOOK_PAGE_URL = "https://www.facebook.com/gogo.buy.it/"
 FACEBOOK_PAGE_ID = os.environ.get("FACEBOOK_PAGE_ID", "")
@@ -58,24 +60,63 @@ def save_draft(message):
         f.write(message)
 
 
+def pick_image():
+    """輪播選取圖片：依照今天是第幾天（mod 總張數）選圖，無圖則回傳 None"""
+    if not os.path.isdir(IMAGES_DIR):
+        return None
+    exts = (".jpg", ".jpeg", ".png", ".webp")
+    images = sorted([
+        os.path.join(IMAGES_DIR, f)
+        for f in os.listdir(IMAGES_DIR)
+        if f.lower().endswith(exts)
+    ])
+    if not images:
+        return None
+    day_index = datetime.now().timetuple().tm_yday  # 1-365
+    return images[day_index % len(images)]
+
+
 def post_to_facebook(message):
     import requests
     if not FACEBOOK_PAGE_ID or not FACEBOOK_PAGE_ACCESS_TOKEN:
         print("[Facebook] 未設定 PAGE_ID / ACCESS_TOKEN，已僅產生草稿")
         return False
 
-    url = f"https://graph.facebook.com/v22.0/{FACEBOOK_PAGE_ID}/feed"
-    payload = {
-        "message": message,
-        "link": SITE_URL,
-        "access_token": FACEBOOK_PAGE_ACCESS_TOKEN,
-    }
-    resp = requests.post(url, data=payload, timeout=20)
+    image_path = pick_image()
+
+    if image_path and os.path.exists(image_path):
+        # 使用 /photos 端點上傳圖片貼文
+        url = f"https://graph.facebook.com/v22.0/{FACEBOOK_PAGE_ID}/photos"
+        print(f"[Facebook] 附上圖片: {os.path.basename(image_path)}")
+        with open(image_path, "rb") as img_file:
+            mime = "image/png" if image_path.lower().endswith(".png") else "image/jpeg"
+            resp = requests.post(
+                url,
+                data={
+                    "message": message,
+                    "access_token": FACEBOOK_PAGE_ACCESS_TOKEN,
+                },
+                files={"source": (os.path.basename(image_path), img_file, mime)},
+                timeout=60,
+            )
+    else:
+        # 無圖片：純文字 + 連結
+        url = f"https://graph.facebook.com/v22.0/{FACEBOOK_PAGE_ID}/feed"
+        resp = requests.post(
+            url,
+            data={
+                "message": message,
+                "link": SITE_URL,
+                "access_token": FACEBOOK_PAGE_ACCESS_TOKEN,
+            },
+            timeout=20,
+        )
+
     print(f"[Facebook] HTTP {resp.status_code}")
     if resp.status_code == 200:
         print("[Facebook] 貼文發佈成功")
         return True
-    print(resp.text[:300])
+    print(resp.text[:400])
     return False
 
 
