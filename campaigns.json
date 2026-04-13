@@ -1,0 +1,140 @@
+{
+  "affiliate_id": "af000094185",
+  "affiliate_email": "masatsai032@gmail.com",
+  "last_updated": "2026-04-13",
+  "note": "以下品牌均為 iChannels 通路王官方合作廣告主（來源: contactus-malist.php）",
+  "campaigns": [
+    {
+      "id": "C001",
+      "brand": "momo購物網",
+      "name": "momo購物網 限時特賣活動",
+      "desc": "台灣最大購物平台，每日限時折扣、滿額免運、超過百萬商品任你挑",
+      "category": "購物商城",
+      "platform": "momo",
+      "url": "https://www.momoshop.com.tw/main/Main.jsp",
+      "uid": "momo-main-001",
+      "active": true
+    },
+    {
+      "id": "C002",
+      "brand": "蝦皮商城",
+      "name": "蝦皮商城 超值好物特價中",
+      "desc": "蝦皮官方商城正品保障，蝦皮幣回饋、免運費，天天都有限時閃購",
+      "category": "購物商城",
+      "platform": "shopee",
+      "url": "https://shopee.tw/",
+      "uid": "shopee-main-001",
+      "active": true
+    },
+    {
+      "id": "C003",
+      "brand": "博客來",
+      "name": "博客來 書籍影音全館特惠",
+      "desc": "台灣最大網路書店，書籍、文具、影音、文創商品一站購足，可用超商取貨",
+      "category": "購物商城",
+      "platform": "books",
+      "url": "https://www.books.com.tw/",
+      "uid": "books-main-001",
+      "active": true
+    },
+    {
+      "id": "C004",
+      "brand": "dyson",
+      "name": "Dyson 官網 家電限時優惠",
+      "desc": "Dyson無線吸塵器、空氣清淨機、吹風機，官網購買享延長保固+免費配件，正品保障",
+      "category": "3C家電",
+      "platform": "dyson",
+      "url": "https://www.dyson.com.tw/",
+      "uid": "dyson-official-001",
+      "active": true
+    },
+    {
+      "id": "C005",
+      "brand": "小米台灣 Xiaomi",
+      "name": "小米台灣 CP值爆表新品",
+      "desc": "小米手機、智慧家居、穿戴裝置，高CP值科技生活，官網直購享最優惠價格",
+      "category": "3C家電",
+      "platform": "xiaomi",
+      "url": "https://www.mi.com/tw/",
+      "uid": "xiaomi-main-001",
+      "active": true
+    },
+    {
+      "id": "C006",
+      "brand": "Nike.com (亞太區)",
+      "name": "Nike 官網 運動鞋服限時折扣",
+      "desc": "Nike Air Max、Jordan、運動衣褲，官網獨家配色限量款，免費配送，NikePlus會員優惠",
+      "category": "美容保養/服飾精品",
+      "platform": "nike",
+      "url": "https://www.nike.com/tw/",
+      "uid": "nike-main-001",
+      "active": true
+    },
+    {
+      "id": "C007",
+      "brand": "Hahow好學校",
+      "name": "Hahow 線上課程 學一技之長",
+      "desc": "台灣最大群眾募資線上學習平台，設計、程式、語言、職場技能，終身觀看不限次數",
+      "category": "教育學習",
+      "platform": "hahow",
+      "url": "https://hahow.in/",
+      "uid": "hahow-main-001",
+      "active": true
+    },
+    {
+      "id": "C008",
+      "brand": "Klook 客路",
+      "name": "Klook 旅遊體驗超值優惠",
+      "desc": "全球旅遊票券、景點門票、交通接送一站預訂，台日韓東南亞超多選擇，手機即用",
+      "category": "休閒旅遊",
+      "platform": "klook",
+      "url": "https://www.klook.com/zh-TW/",
+      "uid": "klook-main-001",
+      "active": true
+    },
+    {
+      "id": "C009",
+      "brand": "KKday",
+      "name": "KKday 台灣在地玩樂特惠",
+      "desc": "台灣旅遊體驗、日本韓國行程、機場接送，在地特色體驗活動，早鳥優惠搶先訂",
+      "category": "休閒旅遊",
+      "platform": "kkday",
+      "url": "https://www.kkday.com/zh-tw/",
+      "uid": "kkday-main-001",
+      "active": true
+    },
+    {
+      "id": "C010",
+      "brand": "Agoda",
+      "name": "Agoda 飯店訂房最低價保證",
+      "desc": "全球200萬間飯店比價，台灣、日本、泰國最優惠住宿，即訂即享早鳥折扣",
+      "category": "休閒旅遊",
+      "platform": "agoda",
+      "url": "https://www.agoda.com/zh-tw/",
+      "uid": "agoda-main-001",
+      "active": true
+    },
+    {
+      "id": "C011",
+      "brand": "快車肉乾",
+      "name": "快車肉乾 手工豬肉乾真的好吃",
+      "desc": "台灣超人氣伴手禮，A1辣味豬肉乾、肉紙脆到掉屑，逢年過節送禮、自用兩相宜",
+      "category": "美食保健",
+      "platform": "kuaiche",
+      "url": "https://www.kuaiche.com.tw/",
+      "uid": "kuaiche-main-001",
+      "active": true
+    },
+    {
+      "id": "C012",
+      "brand": "白蘭氏",
+      "name": "白蘭氏 養生保健品特惠組",
+      "desc": "雞精、兒童雞精、膠原蛋白飲，百年品牌信任保證，媽媽必備養生禮盒，定期訂購享折扣",
+      "category": "美食保健",
+      "platform": "brands",
+      "url": "https://www.brandsworld.com.tw/",
+      "uid": "brands-main-001",
+      "active": true
+    }
+  ]
+}

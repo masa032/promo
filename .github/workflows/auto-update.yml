@@ -1,0 +1,45 @@
+﻿name: Auto Update Affiliate Site
+
+on:
+  schedule:
+    - cron: '0 */4 * * *'   # every 4 hours UTC (= 台北 08/12/16/20/00/04)
+  workflow_dispatch:          # GitHub UI 手動觸發按鈕
+  push:
+    branches: [ main ]        # 推 code 時也立即更新
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write         # 需要寫入 gh-pages
+
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install google-genai requests python-dotenv
+
+      - name: Run campaign generator
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          ICHANNELS_AFFILIATE_ID: af000094185
+        run: python run_campaign.py
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./output
+          publish_branch: gh-pages
+          commit_message: 'chore: auto-update ${{ github.run_id }}'
+          force_orphan: false
