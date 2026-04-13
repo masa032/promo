@@ -11,3 +11,4 @@ __pycache__/
 # 本機 Windows 腳本（含 PAT）
 deploy_github.ps1
 schedule_setup.ps1
+drafts/

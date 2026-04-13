@@ -6,6 +6,7 @@ from datetime import datetime
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 LOGS_DIR = os.path.join(BASE_DIR, "logs")
 OUTPUT_DIR = os.path.join(BASE_DIR, "output")
+DRAFT_DIR = os.path.join(BASE_DIR, "drafts")
 SITE_URL = "https://masa032.github.io/ichannels-promo/"
 FACEBOOK_PAGE_URL = "https://www.facebook.com/gogo.buy.it/"
 FACEBOOK_PAGE_ID = os.environ.get("FACEBOOK_PAGE_ID", "")
@@ -33,8 +34,8 @@ def build_post(records):
 
 
 def save_draft(message):
-    os.makedirs(OUTPUT_DIR, exist_ok=True)
-    with open(os.path.join(OUTPUT_DIR, "facebook_post.txt"), "w", encoding="utf-8") as f:
+    os.makedirs(DRAFT_DIR, exist_ok=True)
+    with open(os.path.join(DRAFT_DIR, "facebook_post.txt"), "w", encoding="utf-8") as f:
         f.write(message)
 
 
