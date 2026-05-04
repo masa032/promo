@@ -1,0 +1,84 @@
+name: SEO Global Push — Sitemap Ping & Deploy Verification
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'life/**'
+      - 'sitemap.xml'
+      - 'feed.xml'
+      - 'robots.txt'
+  schedule:
+    # Weekly ping every Monday 03:00 UTC
+    - cron: '0 3 * * 1'
+  workflow_dispatch:
+
+jobs:
+  seo-ping:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Update sitemap lastmod to today
+        run: |
+          TODAY=$(date -u +%Y-%m-%d)
+          sed -i "s|<lastmod>[0-9]\{4\}-[0-9]\{2\}-[0-9]\{2\}</lastmod>|<lastmod>${TODAY}</lastmod>|g" sitemap.xml
+          echo "Updated sitemap lastmod to ${TODAY}"
+
+      - name: Commit updated sitemap if changed
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git diff --quiet sitemap.xml || {
+            git add sitemap.xml
+            git commit -m "chore(seo): auto-update sitemap lastmod to $(date -u +%Y-%m-%d)"
+            git push
+          }
+
+      - name: Ping Google Search Console
+        run: |
+          SITEMAP="https://hanryul32.github.io/promo/sitemap.xml"
+          FEED="https://hanryul32.github.io/promo/feed.xml"
+          echo "Pinging Google..."
+          curl -s -o /dev/null -w "Google ping status: %{http_code}\n" \
+            "https://www.google.com/ping?sitemap=${SITEMAP}" || true
+          echo "Pinging Google RSS..."
+          curl -s -o /dev/null -w "Google RSS ping status: %{http_code}\n" \
+            "https://www.google.com/ping?sitemap=${FEED}" || true
+
+      - name: Ping Bing Webmaster
+        run: |
+          SITEMAP="https://hanryul32.github.io/promo/sitemap.xml"
+          echo "Pinging Bing..."
+          curl -s -o /dev/null -w "Bing ping status: %{http_code}\n" \
+            "https://www.bing.com/ping?sitemap=${SITEMAP}" || true
+
+      - name: Verify live site health
+        run: |
+          echo "Checking live endpoint..."
+          STATUS=$(curl -s -o /dev/null -w "%{http_code}" \
+            "https://hanryul32.github.io/promo/life/" \
+            --max-time 15 --retry 2) || STATUS="timeout"
+          echo "Live site HTTP: $STATUS"
+          if [ "$STATUS" = "200" ]; then
+            echo "Site is healthy"
+          else
+            echo "WARNING: site returned $STATUS — may still be deploying"
+          fi
+
+      - name: Check RSS feed valid
+        run: |
+          curl -s "https://hanryul32.github.io/promo/feed.xml" \
+            --max-time 10 | grep -q "<rss" && echo "RSS feed OK" || echo "RSS feed not yet live (pending deploy)"
+
+      - name: Summary
+        run: |
+          echo "## SEO Global Push Summary" >> $GITHUB_STEP_SUMMARY
+          echo "| Item | Status |" >> $GITHUB_STEP_SUMMARY
+          echo "|------|--------|" >> $GITHUB_STEP_SUMMARY
+          echo "| Sitemap lastmod | Updated to $(date -u +%Y-%m-%d) |" >> $GITHUB_STEP_SUMMARY
+          echo "| Google ping | Sent |" >> $GITHUB_STEP_SUMMARY
+          echo "| Bing ping | Sent |" >> $GITHUB_STEP_SUMMARY
+          echo "| Site URL | [hanryul32.github.io/promo/life/](https://hanryul32.github.io/promo/life/) |" >> $GITHUB_STEP_SUMMARY
