@@ -38,11 +38,24 @@ jobs:
           sitemap_status=${PIPESTATUS[0]}
 
           echo "== live endpoint ==" | tee -a watch.log
-          curl --fail --location --max-time 30 --silent --show-error https://hanryul32.github.io/promo/life/ > /tmp/life.html 2>> watch.log
-          live_status=$?
-          if [ "$live_status" -eq 0 ]; then
-            wc -c /tmp/life.html | tee -a watch.log
+          live_status=1
+          life_path="/life/"
+          live_urls=()
+          if [ -f CNAME ]; then
+            cname_domain="$(head -n 1 CNAME | tr -d '\r' | tr -cd '[:print:]' | xargs)"
+            if [[ -n "$cname_domain" && "$cname_domain" =~ ^([A-Za-z0-9]([A-Za-z0-9-]{0,61}[A-Za-z0-9])?\.)+[A-Za-z0-9]([A-Za-z0-9-]{0,61}[A-Za-z0-9])?$ ]]; then
+              live_urls+=("https://${cname_domain}${life_path}")
+            fi
           fi
+          live_urls+=("https://hanryul32.github.io/promo${life_path}")
+          for live_url in "${live_urls[@]}"; do
+            echo "checking ${live_url}" | tee -a watch.log
+            if curl --fail --location --max-time 30 --silent --show-error "$live_url" > /tmp/life.html 2>> watch.log; then
+              wc -c /tmp/life.html | tee -a watch.log
+              live_status=0
+              break
+            fi
+          done
 
           echo "== freshness ==" | tee -a watch.log
           now=$(date +%s)
