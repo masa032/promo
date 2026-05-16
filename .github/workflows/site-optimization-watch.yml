@@ -42,7 +42,7 @@ jobs:
           life_path="/life/"
           live_urls=()
           if [ -f CNAME ]; then
-            cname_domain="$(head -n 1 CNAME | tr -d '\r' | grep -Eo '[[:alnum:]][[:alnum:].-]*\.[[:alnum:]]{2,}' | head -n 1 || true)"
+            cname_domain="$(head -n 1 CNAME | tr -d '\r' | tr -cd '[:print:]' | xargs)"
             if [ -n "$cname_domain" ]; then
               live_urls+=("https://${cname_domain}${life_path}")
             fi
