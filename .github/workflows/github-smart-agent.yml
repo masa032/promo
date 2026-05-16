@@ -51,10 +51,17 @@ jobs:
           fi
 
           echo "== live Pages endpoint ==" | tee -a health.log
-          curl --fail --location --max-time 30 --silent --show-error https://hanryul32.github.io/promo/life/ > /tmp/promo_life.html 2>> health.log
+          http_code=$(curl --location --max-time 30 --silent --show-error \
+            --retry 4 --retry-delay 2 --retry-all-errors \
+            --write-out "%{http_code}" \
+            --output /tmp/promo_life.html \
+            https://hanryul32.github.io/promo/life/ 2>> health.log)
           curl_status=$?
-          if [ "$curl_status" -eq 0 ]; then
+          echo "http_code=${http_code}" | tee -a health.log
+          if [ "$curl_status" -eq 0 ] && [ "$http_code" = "200" ]; then
             wc -c /tmp/promo_life.html | tee -a health.log
+          else
+            curl_status=1
           fi
 
           if [ "$readme_status" -ne 0 ] || [ "$fetch_status" -ne 0 ] || [ "$curl_status" -ne 0 ]; then
